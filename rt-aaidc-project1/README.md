@@ -75,9 +75,16 @@ Python 3.10+
 *******************************Setup Instructions****************************
 1. Clone the repository
 git clone https://github.com/fahiyemuhammad/Agentic-AI-RAG-System.git
-cd rt-aaidc-project1-template
+cd ./rt-aaidc-project1/
 
-2. Install dependencies
+
+2. Install dependencies in virtual environment
+
+python -m venv venv
+source venv/bin/activate   # Linux / macOS
+# OR
+venv\Scripts\activate      # Windows
+
 pip install -r requirements.txt
 
 3. Configure environment variables
@@ -105,9 +112,8 @@ You can replace all existing files with company documents, research papers, manu
 
 Running the Application
 
-From the project root:
-
-python src/app.py
+-First Run:   cd src
+-Then run: python app.py
 
 
 ****************************Example interaction:******************
@@ -168,3 +174,5 @@ A company knowledge assistant
 A documentation chatbot
 
 A research paper explorer
+
+Tested on Python 3.10 and 3.11
