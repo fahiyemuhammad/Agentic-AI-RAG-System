@@ -160,12 +160,12 @@ def main():
     assistant.add_documents(docs)
 
     while True:
-        question = input("\nAsk a question (or 'quit'): ")
+        question = input("\nAsk a question (or type 'quit' to exit) ❔: ")
         if question.lower() == "quit":
             break
 
         answer = assistant.invoke(question)
-        print("\nAnswer:")
+        print("\n ✅ Answer:")
         print(answer)
 
 
