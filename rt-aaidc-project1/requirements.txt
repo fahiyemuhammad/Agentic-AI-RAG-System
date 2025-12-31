@@ -1,39 +1,34 @@
 # Core utilities
-python-dotenv==1.1.1
+python-dotenv~=1.1.0
+PyYAML~=6.0.2
 requests==2.32.5
 urllib3==2.5.0
 rich==14.1.0
 
-# FastAPI server (keep if your project uses it)
+# FastAPI server
 fastapi==0.115.9
 uvicorn==0.35.0
 httpx==0.28.1
 httpcore==1.0.9
 h11==0.16.0
 
-# LangChain ecosystem (your original 0.3.x series - stable and compatible)
-langchain==0.3.27
+# LangChain ecosystem (0.3.x series)
+langchain~=0.3.25
 langchain-core==0.3.76
 langchain-community==0.3.27
 langchain-text-splitters==0.3.11
-langchain-openai==0.3.33
 langchain-groq==0.3.8
-langchain-google-genai==2.1.10
+langchain-openai~=0.3.18
+langchain-google-genai~=2.1.0  # Will pull compatible Google SDK
 langsmith==0.4.27
 
-# Google Gemini (legacy SDK - still works, no protobuf conflicts with this set)
-google-generativeai==0.8.3
-google-api-core==2.19.1
-google-auth==2.29.0
-googleapis-common-protos==1.70.0
-
-# Groq (updated safe version)
+# Groq
 groq==0.31.1
 
-# Vector DB - latest stable
+# Vector DB
 chromadb==1.4.0
 
-# Embeddings & models (CPU-friendly, no massive CUDA wheels)
+# Embeddings & models (CPU-friendly)
 sentence-transformers==5.1.0
 torch==2.8.0+cpu
 --extra-index-url https://download.pytorch.org/whl/cpu
@@ -43,14 +38,13 @@ tokenizers==0.22.0
 safetensors==0.6.2
 huggingface-hub==0.34.4
 
-# Scientific stack (compatible with above)
-numpy==2.4.0  # Latest as of Dec 30, 2025
-scipy==1.16.1
+# Scientific stack
+numpy~=2.2.0
+scipy==1.13.1  # Compatible with Python 3.10
 scikit-learn==1.7.2
 pillow==11.3.0
 
-# Other common deps from your original (all exist and compatible)
-PyYAML==6.0.2
+# Other dependencies
 pydantic==2.11.7
 pydantic_core==2.33.2
 typing_extensions==4.15.0
@@ -60,5 +54,4 @@ Jinja2==3.1.6
 MarkupSafe==3.0.2
 orjson==3.11.3
 posthog==5.4.0
-protobuf==5.28.2  # Safe for legacy Gemini
-onnxruntime==1.22.1
+protobuf==3.20.3  # Prevents ChromaDB runtime errors

@@ -87,6 +87,19 @@ venv\Scripts\activate      # Windows
 
 pip install -r requirements.txt
 
+                                  ## Installation Note  Tip
+
+            The first `pip install -r requirements.txt` may take 15–40 minutes due to:
+            - Large packages (especially PyTorch CPU ~184 MB)
+            - Complex dependency resolution
+            
+            Tips to speed it up:
+            - Use a fast internet connection
+            - Upgrade pip first: `pip install --upgrade pip`
+            - (Optional) Use a cache: `pip install --no-cache-dir -r requirements.txt` (or enable pip cache)
+            
+            Subsequent runs will be instant if using the same venv.
+
 3. Configure environment variables
 cp .env_example .env
 
