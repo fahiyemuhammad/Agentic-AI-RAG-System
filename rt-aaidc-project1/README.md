@@ -1,191 +1,137 @@
-RAG-Based AI Assistant
+# RAG-Based AI Assistant
 
-Agentic AI Essentials – Final Project
+**Agentic AI Essentials – Module 1 Final Project**
 
-***************************Overview***************************
+## Overview
 
-This project implements a Retrieval-Augmented Generation (RAG) AI assistant that answers questions based on a custom document knowledge base.
+This project implements a **Retrieval-Augmented Generation (RAG)** AI assistant that answers questions based strictly on a custom document knowledge base.
 
-Instead of relying only on a large language model’s internal knowledge, the assistant:
-
-    *Searches a vector database of your documents
-    
-    *Retrieves the most relevant chunks
-    
-    *Uses those chunks as context to generate accurate, grounded answers
+Rather than relying solely on a language model’s internal knowledge, the system:
+- Retrieves relevant information from a vector database
+- Injects retrieved context into the prompt
+- Generates grounded, context-aware responses
 
 This approach improves factual accuracy, transparency, and domain specificity.
 
-**************************Key Features**********************
+## Key Features
 
-Load custom text documents (.txt)
+- Custom document ingestion (`.txt` files)
+- Automatic document chunking for retrieval efficiency
+- Semantic embeddings using **HuggingFace SentenceTransformers**
+- Vector storage and similarity search via **ChromaDB**
+- Threshold-based retrieval filtering with fallback logic
+- **Short-term conversational memory** for multi-turn interactions
+- Support for multiple LLM providers (Groq, OpenAI, Google Gemini)
+- Simple command-line interface (CLI)
+- Persistent vector database storage
 
-Automatically chunk documents for efficient retrieval
+## Conversational Memory
 
-Generate embeddings using HuggingFace SentenceTransformers
+The assistant includes **short-term conversational memory** by storing recent user–assistant exchanges and injecting them into the prompt at inference time.
 
-Store and query embeddings using ChromaDB
+- Enables follow-up questions and contextual continuity (e.g., “Tell me more about it” works after “What is AI?”)
+- Memory window is bounded to control token usage
+- Prevents hallucination by maintaining strict grounding in retrieved context
 
-Retrieve relevant context via semantic similarity search
+This prompt-based memory strategy provides a practical baseline for conversational RAG systems.
 
-Generate answers using OpenAI, Groq, or Google Gemini
-
-Simple command-line interface (CLI)
-
-Persistent vector database storage
-
-*************************Project Architecture (RAG Pipeline)****************
-User Question
-      ↓
-Query Embedding
-      ↓
+## Project Architecture (RAG Pipeline)
+User Query
+↓
+Query Embedding (with optional rewriting for follow-ups)
+↓
 Vector Database (ChromaDB)
-      ↓
-Relevant Document Chunks
-      ↓
-Prompt + Context
-      ↓
-LLM Response
-
-***************************Project Structure********************
-rt-aaidc-project1-template/
+↓
+Relevant Document Chunks (filtered by similarity + fallback)
+↓
+Prompt (Context + Memory)
+↓
+LLM → Grounded Response
+text## Project Structure
+rt-aaidc-project1/
 ├── src/
-│   ├── app.py              # Main RAG application
-│   ├── vectordb.py         # Vector DB + embedding logic
-│   ├── documents/          # Knowledge base (.txt files)
-│   └── chroma_db/          # Persistent vector store
+│   ├── app.py                  # Main RAG application (with memory)
+│   ├── vectordb.py             # Vector DB and embedding logic
+│   ├── documents/              # Knowledge base (.txt files)
+│   └── chroma_db/              # Persistent vector store (auto-created)
 ├── requirements.txt
-├── Pipfile
 ├── .env_example
 ├── README.md
 └── LICENSE
+text## Technologies Used
 
-*******************************Technologies Used************************
+- LangChain – Prompt orchestration and LLM abstraction
+- ChromaDB – Vector database
+- SentenceTransformers – Text embeddings
+- Groq / OpenAI / Google Gemini – LLM providers
+- Python 3.10+
 
-LangChain – Prompt & LLM orchestration
+## Setup Instructions
 
-ChromaDB – Vector database
-
-SentenceTransformers – Text embeddings
-
-Groq / OpenAI / Google Gemini – LLM providers
-
-Python 3.10+
-
-*******************************Setup Instructions****************************
-1. Clone the repository
+### 1. Clone the Repository
+```bash
 git clone https://github.com/fahiyemuhammad/Agentic-AI-RAG-System.git
-cd ./rt-aaidc-project1/
-
-
-2. Install dependencies in virtual environment
-
+cd rt-aaidc-project1
+2. Create Virtual Environment & Install Dependencies
 python -m venv venv
-source venv/bin/activate   # Linux / macOS
+
+# Linux / macOS
+source venv/bin/activate
+
+# Windows
+venv\Scripts\activate
+
+ pip install --upgrade pip
+ pip install -r requirements.txt
+Installation Note
+The first install may take 15–40 minutes due to large dependencies (e.g., PyTorch CPU). This is normal and only happens once.
+3. Configure Environment Variables
+ cp .env_example .env
+Edit .env and add at least one API key:
+envGROQ_API_KEY=your_groq_key_here
 # OR
-venv\Scripts\activate      # Windows
-
-pip install -r requirements.txt
-
-                                  ## Installation Note  Tip
-
-            The first `pip install -r requirements.txt` may take 15–40 minutes due to:
-            - Large packages (especially PyTorch CPU ~184 MB)
-            - Complex dependency resolution
-            
-            Tips to speed it up:
-            - Use a fast internet connection
-            - Upgrade pip first: `pip install --upgrade pip`
-            - (Optional) Use a cache: `pip install --no-cache-dir -r requirements.txt` (or enable pip cache)
-            
-            Subsequent runs will be instant if using the same venv.
-
-3. Configure environment variables
-cp .env_example .env
-
-
-Edit .env and add one API key:
-
-GROQ_API_KEY=your_key_here
-# or
-OPENAI_API_KEY=your_key_here
-# or
-GOOGLE_API_KEY=your_key_here
-
-Adding Your Own Documents
-
-Place .txt files inside:
-
-src/documents/
-
-
-Each file should contain clean text related to the domain you want your assistant to answer questions about.
-
-You can replace all existing files with company documents, research papers, manuals, or notes — the system will continue to work without code changes.
-
+OPENAI_API_KEY=your_openai_key_here
+# OR
+GOOGLE_API_KEY=your_google_key_here
+4. Add Your Own Documents (Optional)
+Place any .txt files in src/documents/.
+The assistant will automatically load and index them.
 Running the Application
+ cd src
+ python app.py
+Example Interaction (with memory)
+textAsk a question (or 'quit' to exit):
 
--First Run:   cd src
--Then run: python app.py
+You: What is Artificial Intelligence?
+Assistant: Based on available information: Artificial Intelligence (AI) is a branch of computer science...
 
+You: Tell me more about its history.
+Assistant: Based on available information: The history of AI is not covered in detail in the provided context...
 
-****************************Example interaction:******************
+You: And what are its main ethical concerns?
+Assistant: Based on available information: The ethics of AI include concerns about fairness, avoiding bias...
+Maintenance & Support
 
-Ask a question (or 'quit'): What is Artificial Intelligence?
+Maintenance: This is a personal project for the Agentic AI Essentials certification. The code is intentionally simple and modular for easy extension.
+Support: Issues can be reported via GitHub Issues on the repository.
+Future: Planned enhancements include long-term memory, web UI, and quantitative evaluation metrics.
 
-Answer:
-Artificial Intelligence (AI) is a branch of computer science that focuses on building systems capable of performing tasks that typically require human intelligence...
+Evaluation Considerations
+Current evaluation is based on:
 
-*************************Example Queries************************
+Retrieval hit relevance (top-K similarity)
+Context grounding
+Hallucination avoidance
+Multi-turn conversational coherence
 
-What is quantum computing?
+Future improvements could include quantitative metrics (precision@k, recall@k, RAGAS scores).
+Final Notes
+This project demonstrates a production-style RAG system with modular design, conversational memory, and grounded reasoning.
+It is structured to support incremental extension into:
 
-Explain machine learning
+Company knowledge assistants
+Documentation chatbots
+Research exploration tools
 
-What are the ethical concerns of AI?
-
-How does deep learning work?
-
-*************************How This Project Meets RAG Requirements**************
-
-Document ingestion and chunking
-
-Vector embeddings and storage
-
-Semantic similarity search
-
-Prompt → Retriever → LLM pipeline
-
-Custom knowledge base
-
-Working CLI interface
-
-This satisfies the Agentic AI Essentials Certification project requirements.
-
-********************Possible Future Enhancements ************************
-
-Session-based memory
-
-Agent-style reasoning (ReAct)
-
-Web search tools
-
-Evaluation metrics
-
-UI frontend
-
-Multi-agent orchestration (LangGraph / CrewAI)
-
-***********************Final Notes****************************
-
-This project demonstrates a fully functional RAG system, built using best practices in modern LLM application design.
-
-It is intentionally modular so it can be extended into:
-
-A company knowledge assistant
-
-A documentation chatbot
-
-A research paper explorer
-
-Tested on Python 3.10 and 3.11
+Tested on Python 3.10 and 3.11.
+Thank you for reviewing!
